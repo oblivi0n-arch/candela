@@ -5,7 +5,7 @@ describe('parseMap', () => {
     it('reads size and tiles from text', () => {
         const map = parseMap(`
 ###
-#.#
+#@#
 ###
 `)
 
@@ -17,5 +17,23 @@ describe('parseMap', () => {
 
     it('rejects lines of different length', () => {
         expect(() => parseMap('###\n##')).toThrow()
+    })
+
+    it('finds the player start', () => {
+        const map = parseMap(`
+###
+#@#
+###
+`)
+
+        expect(map.start).toEqual({ x: 1, y: 1 })
+    })
+
+    it('rejects a map without a start', () => {
+        expect(() => parseMap('###\n#.#\n###')).toThrow()
+    })
+
+    it('rejects a map with two starts', () => {
+        expect(() => parseMap('#@@#')).toThrow()
     })
 })

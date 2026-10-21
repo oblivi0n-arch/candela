@@ -1,9 +1,13 @@
+// A cell on the grid. (0, 0) is the top-left corner.
+export type Position = { x: number; y: number }
+
 export type Tile = 'wall' | 'floor'
 
 export type GameMap = {
     cols: number
     rows: number
     tiles: Tile[][] // tiles[y][x]: rows first, then columns
+    start: Position // where the player begins, marked with @
 }
 
 // Turns a level drawn as text into a grid of tiles.
@@ -17,7 +21,20 @@ export function parseMap(text: string): GameMap {
         }
     })
 
-    const tiles = lines.map((line) => [...line].map((char) => (char === '#' ? 'wall' : 'floor')))
+    let start: Position | undefined
 
-    return { cols, rows: lines.length, tiles }
+    const tiles = lines.map((line, y) =>
+        [...line].map((char, x): Tile => {
+            if (char === '@') {
+                if (start) throw new Error(`Map has a second start (@) on line ${y + 1}`)
+                start = { x, y }
+                return 'floor' // the player stands on floor
+            }
+            return char === '#' ? 'wall' : 'floor'
+        }),
+    )
+
+    if (!start) throw new Error('Map has no start (@)')
+
+    return { cols, rows: lines.length, tiles, start }
 }

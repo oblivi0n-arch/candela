@@ -1,5 +1,4 @@
-// A cell on the grid. (0, 0) is the top-left corner.
-export type Position = { x: number; y: number }
+import type { Position } from './map'
 
 // Everything the game needs to remember between frames.
 export type GameState = {

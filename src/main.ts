@@ -1,6 +1,7 @@
 import './style.css'
 import { createInitialState } from './game/state'
 import { setupCanvas, render } from './render/render'
+import { tryMove } from './game/move'
 
 const canvas = document.querySelector<HTMLCanvasElement>('#game')
 if (!canvas) throw new Error('Canvas #game not found')
@@ -13,19 +14,19 @@ window.addEventListener('keydown', (event) => {
     switch (event.code) {
         case 'ArrowUp':
         case 'KeyW':
-            state.player.y -= 1
+            tryMove(state, 0, -1)
             break
         case 'ArrowDown':
         case 'KeyS':
-            state.player.y += 1
+            tryMove(state, 0, +1)
             break
         case 'ArrowLeft':
         case 'KeyA':
-            state.player.x -= 1
+            tryMove(state, -1, 0)
             break
         case 'ArrowRight':
         case 'KeyD':
-            state.player.x += 1
+            tryMove(state, +1, 0)
             break
         default:
             return // not a movement key: ignore it

@@ -1,60 +1,38 @@
 import './style.css'
-import heroImg from './assets/hero.png'
-import typescriptLogo from './assets/typescript.svg'
-import viteLogo from './assets/vite.svg'
-import { setupCounter } from './counter.ts'
 
-document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
-<section id="center">
-  <div class="hero">
-    <img src="${heroImg}" class="base" width="170" height="179">
-    <img src="${typescriptLogo}" class="framework" alt="TypeScript logo"/>
-    <img src="${viteLogo}" class="vite" alt="Vite logo" />
-  </div>
-  <div>
-    <h1>Get started</h1>
-    <p>Edit <code>src/main.ts</code> and save to test <code>HMR</code></p>
-  </div>
-  <button id="counter" type="button" class="counter"></button>
-</section>
+// Grid size in cells and the size of one cell in CSS pixels.
+const COLS = 40
+const ROWS = 20
+const CELL = 20
 
-<div class="ticks"></div>
+const canvas = document.querySelector<HTMLCanvasElement>('#game')
+if (!canvas) throw new Error('Canvas #game not found')
 
-<section id="next-steps">
-  <div id="docs">
-    <svg class="icon" role="presentation" aria-hidden="true"><use href="/icons.svg#documentation-icon"></use></svg>
-    <h2>Documentation</h2>
-    <p>Your questions, answered</p>
-    <ul>
-      <li>
-        <a href="https://vite.dev/" target="_blank">
-          <img class="logo" src="${viteLogo}" alt="" />
-          Explore Vite
-        </a>
-      </li>
-      <li>
-        <a href="https://www.typescriptlang.org" target="_blank">
-          <img class="button-icon" src="${typescriptLogo}" alt="">
-          Learn more
-        </a>
-      </li>
-    </ul>
-  </div>
-  <div id="social">
-    <svg class="icon" role="presentation" aria-hidden="true"><use href="/icons.svg#social-icon"></use></svg>
-    <h2>Connect with us</h2>
-    <p>Join the Vite community</p>
-    <ul>
-      <li><a href="https://github.com/vitejs/vite" target="_blank"><svg class="button-icon" role="presentation" aria-hidden="true"><use href="/icons.svg#github-icon"></use></svg>GitHub</a></li>
-      <li><a href="https://chat.vite.dev/" target="_blank"><svg class="button-icon" role="presentation" aria-hidden="true"><use href="/icons.svg#discord-icon"></use></svg>Discord</a></li>
-      <li><a href="https://x.com/vite_js" target="_blank"><svg class="button-icon" role="presentation" aria-hidden="true"><use href="/icons.svg#x-icon"></use></svg>X.com</a></li>
-      <li><a href="https://bsky.app/profile/vite.dev" target="_blank"><svg class="button-icon" role="presentation" aria-hidden="true"><use href="/icons.svg#bluesky-icon"></use></svg>Bluesky</a></li>
-    </ul>
-  </div>
-</section>
+const ctx = canvas.getContext('2d')
+if (!ctx) throw new Error('2D context not available')
 
-<div class="ticks"></div>
-<section id="spacer"></section>
-`
+// Render at the screen's real pixel density so letters stay sharp on Retina.
+const dpr = window.devicePixelRatio || 1
+canvas.width = COLS * CELL * dpr
+canvas.height = ROWS * CELL * dpr
+canvas.style.width = `${COLS * CELL}px`
+canvas.style.height = `${ROWS * CELL}px`
+ctx.scale(dpr, dpr)
 
-setupCounter(document.querySelector<HTMLButtonElement>('#counter')!)
+ctx.font = `${CELL * 0.8}px ui-monospace, Menlo, monospace`
+ctx.textAlign = 'center'
+ctx.textBaseline = 'middle'
+
+function drawGlyph(char: string, x: number, y: number, color: string): void {
+    ctx!.fillStyle = color
+    ctx!.fillText(char, x * CELL + CELL / 2, y * CELL + CELL / 2)
+}
+
+for (let y = 0; y < ROWS; y++) {
+    for (let x = 0; x < COLS; x++) {
+        const isWall = x === 0 || y === 0 || x === COLS - 1 || y === ROWS - 1
+        drawGlyph(isWall ? '#' : '.', x, y, isWall ? '#8a8a8a' : '#2e2e2e')
+    }
+}
+
+drawGlyph('@', 5, 5, '#f0e6d2')

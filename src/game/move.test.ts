@@ -9,20 +9,23 @@ describe('tryMove', () => {
         state.player = { x: 5, y: 5 }
 
         // When: moving right
-        tryMove(state, 1, 0)
+        const moved = tryMove(state, 1, 0)
 
         // Then: player is one cell to the right
+        expect(moved).toBe(true)
         expect(state.player).toEqual({ x: 6, y: 5 })
-        expect(tryMove(state, 1, 0)).toBe(true)
     })
 
     it('does not move the player into a wall', () => {
+        // Given: player right next to the left wall
         const state = createInitialState()
-        state.player = { x: 1, y: 5 } // right next to the left wall
+        state.player = { x: 1, y: 5 }
 
-        tryMove(state, -1, 0)
+        // When: moving left, into the wall
+        const moved = tryMove(state, -1, 0)
 
+        // Then: player stays where it was
+        expect(moved).toBe(false)
         expect(state.player).toEqual({ x: 1, y: 5 })
-        expect(tryMove(state, -1, 0)).toBe(false)
     })
 })

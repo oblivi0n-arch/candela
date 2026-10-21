@@ -1,6 +1,7 @@
 import './style.css'
 import { createInitialState } from './game/state'
 import { setupCanvas, render } from './render/render'
+import { applyThemeToPage } from './render/theme'
 import { tryMove } from './game/move'
 import { endTurn } from './game/turn'
 import { parseMap } from './game/map'
@@ -8,6 +9,8 @@ import level1 from './levels/level-1.txt?raw'
 
 const canvas = document.querySelector<HTMLCanvasElement>('#game')
 if (!canvas) throw new Error('Canvas #game not found')
+
+applyThemeToPage()
 
 const state = createInitialState(parseMap(level1))
 const ctx = setupCanvas(canvas, state)

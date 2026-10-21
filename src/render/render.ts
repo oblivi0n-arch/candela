@@ -1,15 +1,6 @@
 import type { GameState } from '../game/state'
 import { isWall } from '../game/map'
-
-// Size of one grid cell in CSS pixels.
-export const CELL = 20
-
-const COLORS = {
-    background: '#0b0b0b',
-    wall: '#8a8a8a',
-    floor: '#2e2e2e',
-    player: '#f0e6d2',
-}
+import { CELL, COLORS, FONTS } from './theme'
 
 // Prepares the canvas once: size, pixel density and text settings.
 export function setupCanvas(canvas: HTMLCanvasElement, state: GameState): CanvasRenderingContext2D {
@@ -23,7 +14,7 @@ export function setupCanvas(canvas: HTMLCanvasElement, state: GameState): Canvas
     canvas.style.height = `${state.map.rows * CELL}px`
     ctx.scale(dpr, dpr)
 
-    ctx.font = `${CELL * 0.8}px ui-monospace, Menlo, monospace`
+    ctx.font = `${CELL * 0.8}px ${FONTS.grid}`
     ctx.textAlign = 'center'
     ctx.textBaseline = 'middle'
 

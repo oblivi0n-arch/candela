@@ -1,5 +1,5 @@
 import type { GameState } from '../game/state'
-import { isWall } from '../game/move'
+import { isWall } from '../game/map'
 
 // Size of one grid cell in CSS pixels.
 export const CELL = 20
@@ -37,7 +37,7 @@ export function render(ctx: CanvasRenderingContext2D, state: GameState): void {
 
     for (let y = 0; y < state.map.rows; y++) {
         for (let x = 0; x < state.map.cols; x++) {
-            const wall = isWall(state, x, y)
+            const wall = isWall(state.map, x, y)
             drawGlyph(ctx, wall ? '#' : '.', x, y, wall ? COLORS.wall : COLORS.floor)
         }
     }

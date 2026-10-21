@@ -38,3 +38,10 @@ export function parseMap(text: string): GameMap {
 
     return { cols, rows: lines.length, tiles, start }
 }
+
+// Anything outside the map counts as wall.
+export function isWall(map: GameMap, x: number, y: number): boolean {
+    const row = map.tiles[y]
+    if (row === undefined) return true
+    return row[x] !== 'floor'
+}

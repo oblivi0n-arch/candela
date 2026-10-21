@@ -1,18 +1,16 @@
-import type { Position } from './map'
+import type { GameMap, Position } from './map'
 
 // Everything the game needs to remember between frames.
 export type GameState = {
-    cols: number
-    rows: number
+    map: GameMap
     player: Position
     turn: number
 }
 
-export function createInitialState(): GameState {
+export function createInitialState(map: GameMap): GameState {
     return {
-        cols: 40,
-        rows: 20,
-        player: { x: 5, y: 5 },
-        turn: 0
+        map,
+        player: { ...map.start }, // a copy, so moving the player never touches the map
+        turn: 0,
     }
 }

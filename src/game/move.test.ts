@@ -1,12 +1,21 @@
 import { describe, it, expect } from 'vitest'
 import { createInitialState } from './state'
 import { tryMove } from './move'
+import { parseMap } from './map'
+
+const ROOM = `
+#######
+#.....#
+#..@..#
+#.....#
+#######
+`
 
 describe('tryMove', () => {
     it('moves the player onto a free cell', () => {
         // Given: player in the middle of the room
-        const state = createInitialState()
-        state.player = { x: 5, y: 5 }
+        const state = createInitialState(parseMap(ROOM))
+        state.player = { x: 3, y: 2 }   // first test: middle of the room
 
         // When: moving right
         const moved = tryMove(state, 1, 0)
@@ -18,8 +27,8 @@ describe('tryMove', () => {
 
     it('does not move the player into a wall', () => {
         // Given: player right next to the left wall
-        const state = createInitialState()
-        state.player = { x: 1, y: 5 }
+        const state = createInitialState(parseMap(ROOM))
+        state.player = { x: 1, y: 2 }   // second test: next to the left wall
 
         // When: moving left, into the wall
         const moved = tryMove(state, -1, 0)

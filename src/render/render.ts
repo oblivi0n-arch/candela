@@ -1,0 +1,50 @@
+import type { GameState } from '../game/state'
+
+// Size of one grid cell in CSS pixels.
+export const CELL = 20
+
+const COLORS = {
+    background: '#0b0b0b',
+    wall: '#8a8a8a',
+    floor: '#2e2e2e',
+    player: '#f0e6d2',
+}
+
+// Prepares the canvas once: size, pixel density and text settings.
+export function setupCanvas(canvas: HTMLCanvasElement, state: GameState): CanvasRenderingContext2D {
+    const ctx = canvas.getContext('2d')
+    if (!ctx) throw new Error('2D context not available')
+
+    const dpr = window.devicePixelRatio || 1
+    canvas.width = state.cols * CELL * dpr
+    canvas.height = state.rows * CELL * dpr
+    canvas.style.width = `${state.cols * CELL}px`
+    canvas.style.height = `${state.rows * CELL}px`
+    ctx.scale(dpr, dpr)
+
+    ctx.font = `${CELL * 0.8}px ui-monospace, Menlo, monospace`
+    ctx.textAlign = 'center'
+    ctx.textBaseline = 'middle'
+
+    return ctx
+}
+
+// Paints the whole frame from scratch, based only on the state.
+export function render(ctx: CanvasRenderingContext2D, state: GameState): void {
+    ctx.fillStyle = COLORS.background
+    ctx.fillRect(0, 0, state.cols * CELL, state.rows * CELL)
+
+    for (let y = 0; y < state.rows; y++) {
+        for (let x = 0; x < state.cols; x++) {
+            const isWall = x === 0 || y === 0 || x === state.cols - 1 || y === state.rows - 1
+            drawGlyph(ctx, isWall ? '#' : '.', x, y, isWall ? COLORS.wall : COLORS.floor)
+        }
+    }
+
+    drawGlyph(ctx, '@', state.player.x, state.player.y, COLORS.player)
+}
+
+function drawGlyph(ctx: CanvasRenderingContext2D, char: string, x: number, y: number, color: string): void {
+    ctx.fillStyle = color
+    ctx.fillText(char, x * CELL + CELL / 2, y * CELL + CELL / 2)
+}

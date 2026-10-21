@@ -13,6 +13,7 @@ describe('tryMove', () => {
 
         // Then: player is one cell to the right
         expect(state.player).toEqual({ x: 6, y: 5 })
+        expect(tryMove(state, 1, 0)).toBe(true)
     })
 
     it('does not move the player into a wall', () => {
@@ -22,5 +23,6 @@ describe('tryMove', () => {
         tryMove(state, -1, 0)
 
         expect(state.player).toEqual({ x: 1, y: 5 })
+        expect(tryMove(state, -1, 0)).toBe(false)
     })
 })
